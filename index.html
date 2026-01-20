@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kuran Öğreniyorum">
+    <link rel="manifest" href="manifest.json">
+    <title>Kuran Öğreniyorum 🌟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .progress-box h3 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .stars {
+            font-size: 40px;
+            margin: 10px 0;
+        }
+
+        .star-count {
+            margin-top: 10px;
+            font-size: 24px;
+            color: #FFD700;
+            font-weight: 800;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 16px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .tab-beginner { background: #a8e6cf; color: #2d6a4f; }
+        .tab-intermediate { background: #ffd93d; color: #d97706; }
+        .tab-advanced { background: #ff8b94; color: #c9184a; }
+        .tab-shop { background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
+
+        .content {
+            display: grid;
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .card.learned { border-color: #4caf50; background: #e8f5e9; }
+        .card.learning { border-color: #ff9800; background: #fff3e0; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .card-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .card-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-learn { background: #4caf50; color: white; }
+        .btn-audio { background: #9C27B0; color: white; }
+        .btn-practice { background: #2196f3; color: white; }
+
+        .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .modal-title {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .page-indicator {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .modal-page {
+            margin: 20px 0;
+        }
+
+        .page-label {
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .arabic {
+            font-size: 32px;
+            line-height: 2;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            direction: rtl;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .transliteration {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #1565c0;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .meaning {
+            font-size: 18px;
+            color: #666;
+            margin: 15px 0;
+            line-height: 1.8;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .quiz-question {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            font-weight: 600;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f5f5ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .quiz-option.wrong {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .celebration {
+            font-size: 60px;
+            margin: 20px 0;
+        }
+
+        @keyframes starPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1) translateY(-100px); opacity: 0; }
+        }
+
+        .shop-card {
+            border: 3px solid;
+            background: white;
+        }
+
+        .shop-card.unlocked {
+            opacity: 1;
+        }
+
+        .shop-card.locked {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙 Kuran Öğreniyorum 🌟</h1>
+        <p class="subtitle">Eğlenerek Öğren, Sevinerek Ezberle!</p>
+
+        <div class="progress-box">
+            <h3>İlerleme Durumum</h3>
+            <div class="stars" id="progressStars">⭐⭐⭐</div>
+            <p id="progressText">Henüz ezber yok, hadi başla! 💪</p>
+            <div class="star-count">🌟 <span id="totalStars">0</span> Yıldız!</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab tab-beginner active" onclick="changeTab('beginner')">🌱 Başlangıç</button>
+            <button class="tab tab-intermediate" onclick="changeTab('intermediate')">🌿 Orta</button>
+            <button class="tab tab-advanced" onclick="changeTab('advanced')">🌳 İleri</button>
+            <button class="tab tab-shop" onclick="changeTab('shop')">🌟 Mağaza</button>
+        </div>
+
+        <div class="content" id="content"></div>
+    </div>
+
+    <!-- Learn Modal -->
+    <div class="modal" id="learnModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="learnTitle"></h2>
+            <div class="page-indicator" id="pageIndicator">1 / 2</div>
+            
+            <div id="page1" class="modal-page"></div>
+            <div id="page2" class="modal-page" style="display:none;"></div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn" style="background: #e0e0e0; color: #666;" onclick="closeModal('learnModal')">Kapat</button>
+                <button class="modal-btn" id="pageBtn" style="background: #667eea; color: white;">Sonraki →</button>
+                <button class="modal-btn" style="background: #4caf50; color: white;" onclick="startQuiz()">Alıştırma</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="modal" id="quizModal">
+        <div class="modal-content">
+            <h2 class="modal-title">🎯 Alıştırma!</h2>
+            <div class="quiz-question" id="quizQuestion"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn" style="background: #e0e0e0; color: #666;" onclick="closeModal('quizModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="celebration">🎉</div>
+            <h2 class="modal-title">Mükemmel!</h2>
+            <p style="font-size: 18px; font-weight: 600; margin: 20px 0;">Bu sureyi başarıyla tamamladın!</p>
+            <div class="celebration">⭐</div>
+            <div class="modal-buttons">
+                <button class="modal-btn" style="background: #4caf50; color: white;" onclick="closeModal('successModal')">Harika!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATA
+        const DATA = {
+            beginner: [
+                { id: 1, name: "Subhaneke", num: 0, ayat: 1, 
+                  ar: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَلَا إِلَهَ غَيْرُكَ",
+                  tr: "Sübhaneke Allahumme ve bihamdike ve tebarekesmüke ve teala ceddüke ve la ilahe gayruk",
+                  me: "Seni her türlü eksiklikten tenzih ederim Allah'ım. Seni hamd ile tesbih ederim. Senin ismin mübarektir. Şanın yücedir. Senden başka ilah yoktur.",
+                  inf: "Subhaneke duası namazın başında okunan bir duadır.",
+                  q: [
+                    { t: "fill", q: "Sübhaneke Allahumme ve...", a: "bihamdike", o: ["bihamdike", "tebareke", "teala", "gayruk"] },
+                    { t: "choice", q: "Subhaneke nerede okunur?", o: ["Namaz başında", "Namaz sonunda", "Abdest alırken", "Yemekten önce"], c: 0 },
+                    { t: "fill", q: "Ve tebareke... ve teala ceddüke", a: "smüke", o: ["smüke", "hamdike", "ceddüke", "ilahe"] },
+                    { t: "choice", q: "Ne söylüyoruz?", o: ["Allah'a hamd", "Allah'ı tesbih", "Dua", "Hepsi"], c: 3 },
+                    { t: "fill", q: "Ve la ilahe...", a: "gayruk", o: ["gayruk", "bihamdike", "teala", "ceddüke"] }
+                  ]
+                },
+                { id: 2, name: "Kevser", num: 108, ayat: 3,
+                  ar: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ • فَصَلِّ لِرَبِّكَ وَانْحَرْ • إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ",
+                  tr: "İnna a'taynake l kevser • Fe salli li rabbike venhar • İnne şanieke huvel ebter",
+                  me: "Biz sana Kevser'i verdik. Rabbin için namaz kıl ve kurban kes. Asıl soyu kesik olan sana kin besleyendir.",
+                  inf: "Kevser suresi 3 ayettir. Kuran'ın en kısa suresidir.",
+                  q: [
+                    { t: "fill", q: "İnna a'taynake l...", a: "kevser", o: ["kevser", "nas", "felak", "ihlas"] },
+                    { t: "choice", q: "Ne emrediliyor?", o: ["Namaz ve kurban", "Sadaka", "Oruç", "Hac"], c: 0 },
+                    { t: "fill", q: "Fe salli li rabbike ve...", a: "nhar", o: ["nhar", "kevser", "ebter", "şani"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["2", "3", "4", "5"], c: 1 },
+                    { t: "fill", q: "İnne şanieke huvel...", a: "ebter", o: ["ebter", "kevser", "nhar", "salli"] }
+                  ]
+                },
+                { id: 3, name: "Fatiha", num: 1, ayat: 7,
+                  ar: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ • الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ • الرَّحْمَٰنِ الرَّحِيمِ • مَالِكِ يَوْمِ الدِّينِ • إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ • اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ • صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+                  tr: "Bismillahirrahmanirrahim • Elhamdulillahi rabbil alemin • Errahmanirrahim • Maliki yevmiddin • İyyake na'budu ve iyyake nestain • İhdinas sıratal mustekim • Sıratellezine en'amte aleyhim gayril magdubi aleyhim ve leddaaaallin",
+                  me: "Rahman ve Rahim olan Allah'ın adıyla. Hamd, alemlerin Rabbi Allah'a mahsustur. O Rahman'dır, Rahim'dir. Din gününün sahibidir. Yalnız sana ibadet eder ve yalnız senden yardım dileriz. Bizi doğru yola ilet.",
+                  inf: "Fatiha suresi 7 ayettir. Her namazda okunur.",
+                  q: [
+                    { t: "fill", q: "Bismillahir... irrahim", a: "rahman", o: ["rahman", "rahim", "malik", "alemin"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["5", "7", "9", "6"], c: 1 },
+                    { t: "fill", q: "Elhamdulillahi rabbil...", a: "alemin", o: ["alemin", "rahim", "din", "nas"] },
+                    { t: "choice", q: "Hangi dua edilir?", o: ["Doğru yola iletmesini", "Zenginlik", "Sağlık", "Mutluluk"], c: 0 },
+                    { t: "fill", q: "İyyake na'budu ve iyyake...", a: "nestain", o: ["nestain", "nasır", "netakkel", "nehkem"] }
+                  ]
+                },
+                { id: 4, name: "İhlas", num: 112, ayat: 4,
+                  ar: "قُلْ هُوَ اللَّهُ أَحَدٌ • اللَّهُ الصَّمَدُ • لَمْ يَلِدْ وَلَمْ يُولَدْ • وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+                  tr: "Kul huvallahu ehad • Allahus samed • Lem yelid ve lem yuled • Ve lem yekün lehu küfüven ehad",
+                  me: "De ki: O, Allah'tır, bir tektir. Allah Samed'dir. O doğurmamış ve doğmamıştır. Hiçbir şey O'na denk değildir.",
+                  inf: "İhlas suresi 4 ayettir. Allah'ın birliğini anlatır.",
+                  q: [
+                    { t: "fill", q: "Kul huve... ehad", a: "llahu", o: ["llahu", "rahman", "rahim", "samed"] },
+                    { t: "choice", q: "Ne anlatır?", o: ["Allah'ın birliği", "Namaz", "Oruç", "Zekat"], c: 0 },
+                    { t: "fill", q: "Allahus...", a: "samed", o: ["samed", "ehad", "rahman", "rahim"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["3", "4", "5", "6"], c: 1 },
+                    { t: "fill", q: "Lem yelid ve lem...", a: "yuled", o: ["yuled", "ehad", "samed", "kufüv"] }
+                  ]
+                },
+                { id: 5, name: "Nas", num: 114, ayat: 6,
+                  ar: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ • مَلِكِ النَّاسِ • إِلَٰهِ النَّاسِ • مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ • الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ • مِنَ الْجِنَّةِ وَالنَّاسِ",
+                  tr: "Kul euzu birabbinnas • Melikinnas • İlahinnas • Min şerril vesvesil hannas • Ellezi yuvesvisu fi sudürinnas • Minel cinneti vennas",
+                  me: "De ki: İnsanların Rabbine, Malikine, İlahına sığınırım, vesvesecinin şerrinden.",
+                  inf: "Nas suresi 6 ayettir. Şeytanın vesvesesinden Allah'a sığınmayı öğretir.",
+                  q: [
+                    { t: "fill", q: "Kul euzu birabbin...", a: "nas", o: ["nas", "felak", "ihlas", "kevser"] },
+                    { t: "choice", q: "Neden sığınırız?", o: ["Vesveseden", "Hasetten", "Büyüden", "Karanlıktan"], c: 0 },
+                    { t: "fill", q: "Melikinnas ... nas", a: "ilahin", o: ["ilahin", "rabbin", "maliki", "şerri"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["4", "5", "6", "7"], c: 2 },
+                    { t: "fill", q: "Min şerril vesvesil...", a: "hannas", o: ["hannas", "nas", "cinneti", "sudür"] }
+                  ]
+                }
+            ],
+            intermediate: [
+                { id: 6, name: "Felak", num: 113, ayat: 5,
+                  ar: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ • مِن شَرِّ مَا خَلَقَ • وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ • وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ • وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+                  tr: "Kul euzu birabbil felak • Min şerri ma halak • Ve min şerri gasikın iza vekab • Ve min şerrin neffasati fil ukad • Ve min şerri hasidin iza hasede",
+                  me: "De ki: Sabahın Rabbine sığınırım, yarattıklarının şerrinden, karanlığın şerrinden, düğümlere üfleyenlerin şerrinden ve hasetçinin şerrinden.",
+                  inf: "Felak suresi 5 ayettir. Kötülüklerden Allah'a sığınmayı öğretir.",
+                  q: [
+                    { t: "fill", q: "Kul euzu birabbil...", a: "felak", o: ["felak", "nas", "ihlas", "kevser"] },
+                    { t: "choice", q: "Neden sığınırız?", o: ["Kötülüklerden", "Zenginlik için", "Sağlık için", "Mutluluk için"], c: 0 },
+                    { t: "fill", q: "Min şerri ma...", a: "halak", o: ["halak", "felak", "vekab", "hasede"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["3", "4", "5", "6"], c: 2 },
+                    { t: "fill", q: "Ve min şerri hasidin iza...", a: "hasede", o: ["hasede", "halak", "vekab", "felak"] }
+                  ]
+                },
+                { id: 7, name: "Nasr", num: 110, ayat: 3,
+                  ar: "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ • وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا • فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ إِنَّهُ كَانَ تَوَّابًا",
+                  tr: "İza cae nasrullahi vel fetih • Ve raeytennes yedkulune fi dinillahi efvaca • Fe sebbih bihamdi rabbike vestagfirh innehu kane tevvaba",
+                  me: "Allah'ın yardımı ve fetih geldiğinde, insanların bölük bölük Allah'ın dinine girdiklerini gördüğünde, Rabbini hamd ile tesbih et.",
+                  inf: "Nasr suresi 3 ayettir. Mekke'nin fethini müjdeler.",
+                  q: [
+                    { t: "fill", q: "İza cae nasrullahi vel...", a: "fetih", o: ["fetih", "nasr", "tevvab", "efvac"] },
+                    { t: "choice", q: "Hangi olay müjdelenir?", o: ["Hudeybiye", "Mekke'nin fethi", "Uhud", "Bedir"], c: 1 },
+                    { t: "fill", q: "Fe sebbih bihamdi rabbike ve...", a: "stagfirh", o: ["stagfirh", "fetih", "nasr", "tevvab"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["2", "3", "4", "5"], c: 1 },
+                    { t: "fill", q: "İnnehu kane...", a: "tevvaba", o: ["tevvaba", "fetih", "nasr", "efvac"] }
+                  ]
+                },
+                { id: 8, name: "Tebbet", num: 111, ayat: 5,
+                  ar: "تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ • مَا أَغْنَىٰ عَنْهُ مَالُهُ وَمَا كَسَبَ • سَيَصْلَىٰ نَارًا ذَاتَ لَهَبٍ • وَامْرَأَتُهُ حَمَّالَةَ الْحَطَبِ • فِي جِيدِهَا حَبْلٌ مِّن مَّسَدٍ",
+                  tr: "Tebbyet yeda ebi lehebin ve tebb • Ma agna anhu maluhu ve ma keseb • Se yasla naren zate leheb • Vemraetuhu hammeletil hatab • Fi cidiha hablün min mesed",
+                  me: "Ebu Leheb'in iki eli kurusun. Malı da kazandığı da ona fayda vermedi. Alevli bir ateşe girecektir.",
+                  inf: "Tebbet suresi 5 ayettir. Ebu Leheb'in cezasını anlatır.",
+                  q: [
+                    { t: "fill", q: "Tebbyet yeda ebi... ve tebb", a: "lehebin", o: ["lehebin", "hatab", "mesed", "naren"] },
+                    { t: "choice", q: "Ne cezası anlatılır?", o: ["Mal kaybı", "Alevli ateş", "Hastalık", "Yalnızlık"], c: 1 },
+                    { t: "fill", q: "Se yasla naren zate...", a: "leheb", o: ["leheb", "hatab", "mesed", "ebi"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["3", "4", "5", "6"], c: 2 },
+                    { t: "fill", q: "Vemraetuhu hammeletil...", a: "hatab", o: ["hatab", "leheb", "mesed", "naren"] }
+                  ]
+                }
+            ],
+            advanced: [
+                { id: 9, name: "Kafirun", num: 109, ayat: 6,
+                  ar: "قُلْ يَا أَيُّهَا الْكَافِرُونَ • لَا أَعْبُدُ مَا تَعْبُدُونَ • وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ • وَلَا أَنَا عَابِدٌ مَّا عَبَدتُّمْ • وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ • لَكُمْ دِينُكُمْ وَلِيَ دِينِ",
+                  tr: "Kul ya eyyuhel kafirun • La a'budu ma ta'budun • Ve la entum abidune ma a'bud • Ve la ene abidün ma abedtüm • Ve la entum abidune ma a'bud • Lekum dinükümve liye din",
+                  me: "De ki: Ey kafirler! Ben sizin taptıklarınıza tapmam. Sizin dininiz size, benim dinim bana.",
+                  inf: "Kafirun suresi 6 ayettir. Din özgürlüğünü vurgular.",
+                  q: [
+                    { t: "fill", q: "Kul ya eyyuhel...", a: "kafirun", o: ["kafirun", "nas", "felak", "ihlas"] },
+                    { t: "choice", q: "Son ayetinde ne söylenir?", o: ["Sizin dininiz size, benim dinim bana", "Allah birdir", "Namaz kılın", "Sadaka verin"], c: 0 },
+                    { t: "fill", q: "La a'budu ma...", a: "ta'budun", o: ["ta'budun", "kafirun", "abidun", "dinükum"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["4", "5", "6", "7"], c: 2 },
+                    { t: "fill", q: "Lekum dinükümve liye...", a: "din", o: ["din", "kafirun", "abud", "entum"] }
+                  ]
+                },
+                { id: 10, name: "Fil", num: 105, ayat: 5,
+                  ar: "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ • أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ • وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ • تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ • فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ",
+                  tr: "Elem tera keyfe feale rabbüke bi ashabıl fil • Elem yec'al keydehum fi tadlil • Ve ersele aleyhim tayran ebabil • Termihim bi hicaratin min siccil • Fe cealehum ke'asfin me'kul",
+                  me: "Rabbinin fil sahiplerine ne yaptığını görmedin mi? Üzerlerine sürü sürü kuşlar gönderdi.",
+                  inf: "Fil suresi 5 ayettir. Kabe'yi yıkmaya çalışanların cezasını anlatır.",
+                  q: [
+                    { t: "fill", q: "Elem tera keyfe feale rabbüke bi ashabıl...", a: "fil", o: ["fil", "tayran", "siccil", "asfin"] },
+                    { t: "choice", q: "Allah ne gönderdi?", o: ["Melekler", "Sürü sürü kuşlar", "Fırtına", "Deprem"], c: 1 },
+                    { t: "fill", q: "Ve ersele aleyhim tayran...", a: "ebabil", o: ["ebabil", "fil", "siccil", "asfin"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["3", "4", "5", "6"], c: 2 },
+                    { t: "fill", q: "Fe cealehum ke'asfin...", a: "me'kul", o: ["me'kul", "fil", "ebabil", "siccil"] }
+                  ]
+                },
+                { id: 11, name: "Maun", num: 107, ayat: 7,
+                  ar: "أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ • فَذَٰلِكَ الَّذِي يَدُعُّ الْيَتِيمَ • وَلَا يَحُضُّ عَلَىٰ طَعَامِ الْمِسْكِينِ • فَوَيْلٌ لِّلْمُصَلِّينَ • الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ • الَّذِينَ هُمْ يُرَاءُونَ • وَيَمْنَعُونَ الْمَاعُونَ",
+                  tr: "E reeytellezi yükezzibü biddin • Fe zalikelezi yedu'ul yetim • Ve la yehuddu ala taamil miskin • Fe veylün lil musallın • Ellezine hüm an salatihim sahun • Ellezine hüm yüraun • Ve yemneünel maun",
+                  me: "Dini yalanlayanı gördün mü? İşte o, yetimi iter. Yoksula yemek yedirmeyi özendirmez.",
+                  inf: "Maun suresi 7 ayettir. Yetime kötü davranmayı ve gösteriş yapmayı eleştirir.",
+                  q: [
+                    { t: "fill", q: "E reeytellezi yükezzibü bi...", a: "ddin", o: ["ddin", "yetim", "miskin", "maun"] },
+                    { t: "choice", q: "Hangi davranışlar eleştirilir?", o: ["Yetime kötü davranmak", "Namaz kılmamak", "Oruç tutmamak", "Zekat vermemek"], c: 0 },
+                    { t: "fill", q: "Fe zalikelezi yedu'ul...", a: "yetim", o: ["yetim", "miskin", "maun", "ddin"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["5", "6", "7", "8"], c: 2 },
+                    { t: "fill", q: "Ve yemneünel...", a: "maun", o: ["maun", "yetim", "miskin", "ddin"] }
+                  ]
+                },
+                { id: 12, name: "Kureyş", num: 106, ayat: 4,
+                  ar: "لِإِيلَافِ قُرَيْشٍ • إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ • فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ • الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ",
+                  tr: "Li ilafi kureyş • İlafihim rıhlete şşitai vessayf • Felya'büdu rabbe hazel beyt • Ellezi et'amehüm min cu'in ve amenehüm min havf",
+                  me: "Kureyş'in alışkanlığı için, kış ve yaz yolculuklarına alışkanlıkları için, bu evin Rabbine ibadet etsinler.",
+                  inf: "Kureyş suresi 4 ayettir. Kureyş kabilesine verilen nimetleri hatırlatır.",
+                  q: [
+                    { t: "fill", q: "Li ilafi...", a: "kureyş", o: ["kureyş", "beyt", "şitai", "sayf"] },
+                    { t: "choice", q: "Hangi yolculuklar?", o: ["Kış ve yaz", "Sabah ve akşam", "Gece ve gündüz", "İlkbahar ve sonbahar"], c: 0 },
+                    { t: "fill", q: "Felya'büdu rabbe hazel...", a: "beyt", o: ["beyt", "kureyş", "havf", "cu"] },
+                    { t: "choice", q: "Kaç ayettir?", o: ["3", "4", "5", "6"], c: 1 },
+                    { t: "fill", q: "Ve amenehüm min...", a: "havf", o: ["havf", "cu", "beyt", "kureyş"] }
+                  ]
+                }
+            ],
+            shop: [
+                { id: "iman", title: "📿 İmanın Şartları", cost: 6, color: "#4CAF50",
+                  emoji: "🌟",
+                  info: "1) Allah'a İman\n2) Meleklerine İman\n3) Kitaplarına İman\n4) Peygamberlerine İman\n5) Ahiret Gününe İman\n6) Kadere İman",
+                  q: [
+                    { t: "choice", q: "İmanın kaç şartı var?", o: ["4", "5", "6", "7"], c: 2 },
+                    { t: "fill", q: "Allah'a, ..., Kitaplarına", a: "Meleklerine", o: ["Meleklerine", "İnsanlara", "Peygamberlere", "Kitaplara"] },
+                    { t: "choice", q: "Kadere iman şartlardan mı?", o: ["Evet", "Hayır", "Bilmiyorum", "Belki"], c: 0 }
+                  ]
+                },
+                { id: "islam", title: "☪️ İslam'ın Şartları", cost: 12, color: "#2196F3",
+                  emoji: "🕌",
+                  info: "1) Kelime-i Şahadet (La ilahe illallah Muhammeden Resulullah)\n2) Namaz Kılmak (Günde 5 vakit)\n3) Zekat Vermek\n4) Ramazan Ayında Oruç Tutmak\n5) Hac'ca Gitmek (Gücü yeten için)",
+                  q: [
+                    { t: "choice", q: "İslam'ın kaç şartı var?", o: ["3", "4", "5", "6"], c: 2 },
+                    { t: "fill", q: "Şahadet, Namaz, ..., Oruç, Hac", a: "Zekat", o: ["Zekat", "Sadaka", "Kurban", "Dua"] },
+                    { t: "choice", q: "Hangi ibadet şartlardan?", o: ["Sadaka", "Namaz", "Kurban", "Tefekkür"], c: 1 }
+                  ]
+                },
+                { id: "abdest", title: "💧 Abdestin Farzları", cost: 18, color: "#9C27B0",
+                  emoji: "💦",
+                  info: "1) Yüzü Yıkamak (Saçın bittiği yerden çeneye kadar)\n2) Kolları Yıkamak (Dirseklerle birlikte)\n3) Başı Mesh Etmek (Başın dörtte birini)\n4) Ayakları Yıkamak (Topuklarla birlikte)",
+                  q: [
+                    { t: "choice", q: "Abdestin kaç farzı var?", o: ["3", "4", "5", "6"], c: 1 },
+                    { t: "fill", q: "Yüzü yıkamak, Kolları ...", a: "yıkamak", o: ["yıkamak", "mesh etmek", "silmek", "ovmak"] },
+                    { t: "choice", q: "Ayaklar nasıl yıkanır?", o: ["Sadece parmaklar", "Topuklarla birlikte", "Sadece üst", "Mesh edilir"], c: 1 }
+                  ]
+                },
+                { id: "namaz", title: "🕌 Namazın Farzları", cost: 24, color: "#FF5722",
+                  emoji: "🤲",
+                  info: "1) İftitah Tekbiri (Allahu Ekber diyerek başlamak)\n2) Kıyam (Ayakta durmak)\n3) Kıraat (Kuran okumak)\n4) Rüku (Eğilmek)\n5) Secde (2 defa secde etmek)\n6) Son Oturuş (Ettehiyyatü okumak)\n7) Selam Vermek",
+                  q: [
+                    { t: "choice", q: "İftitah tekbiri nedir?", o: ["Allahu Ekber", "Namaza başlama", "İkisi de", "Hiçbiri"], c: 2 },
+                    { t: "fill", q: "Rüku, ..., Son oturuş", a: "Secde", o: ["Secde", "Kıyam", "Kıraat", "Selam"] },
+                    { t: "choice", q: "Namazda kaç secde?", o: ["1", "2", "3", "4"], c: 1 }
+                  ]
+                },
+                { id: "gusul", title: "🚿 Gusül & Teyemmüm", cost: 30, color: "#FF9800",
+                  emoji: "🧼",
+                  info: "GUSÜL:\n1) Ağza Su Vermek (Gargara yapar gibi)\n2) Burna Su Vermek (İçine çekip temizlemek)\n3) Tüm Bedeni Yıkamak (Hiçbir yer kuru kalmamalı)\n\nTEYEMMÜM:\nSu bulunamadığında veya kullanılamadığında temiz toprakla mesh etmektir.",
+                  q: [
+                    { t: "choice", q: "Guslün kaç farzı var?", o: ["2", "3", "4", "5"], c: 1 },
+                    { t: "fill", q: "Ağza su, ..., Bedeni yıkamak", a: "Burna su vermek", o: ["Burna su vermek", "Yüzü yıkamak", "Başı yıkamak", "Mesh"] },
+                    { t: "choice", q: "Teyemmüm ne zaman?", o: ["Su olmayınca", "Her zaman", "Namaz için", "Abdest yerine"], c: 0 }
+                  ]
+                }
+            ]
+        };
+
+        // STATE
+        let state = {
+            currentTab: 'beginner',
+            progress: {},
+            stars: 0,
+            unlocked: [],
+            earnedStars: {}, // Her soru için yıldız alındı mı
+            currentSura: null,
+            currentPage: 1,
+            quizIndex: 0,
+            correctCount: 0,
+            wrongCount: 0, // Yanlış cevap sayısı
+            currentAudio: null,
+            currentAudioId: null
+        };
+
+        // LOAD
+        function loadState() {
+            const saved = localStorage.getItem('quranApp');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.progress = data.progress || {};
+                state.stars = data.stars || 0;
+                state.unlocked = data.unlocked || [];
+                state.earnedStars = data.earnedStars || {};
+            }
+        }
+
+        // SAVE
+        function saveState() {
+            localStorage.setItem('quranApp', JSON.stringify({
+                progress: state.progress,
+                stars: state.stars,
+                unlocked: state.unlocked,
+                earnedStars: state.earnedStars
+            }));
+            updateProgress();
+        }
+
+        // UPDATE PROGRESS
+        function updateProgress() {
+            const learnedSuras = Object.keys(state.progress).filter(id => state.progress[id] === 'learned').length;
+            const learnedShop = state.unlocked.length;
+            
+            let progressText = '';
+            if (learnedSuras > 0 && learnedShop > 0) {
+                progressText = `<strong>${learnedSuras}</strong> sure 📿 ve <strong>${learnedShop}</strong> konu 📚 ezberlendi!`;
+            } else if (learnedSuras > 0) {
+                progressText = `<strong>${learnedSuras}</strong> sure 📿 ezberlendi!`;
+            } else if (learnedShop > 0) {
+                progressText = `<strong>${learnedShop}</strong> konu 📚 ezberlendi!`;
+            } else {
+                progressText = `Henüz ezber yok, hadi başla! 💪`;
+            }
+            
+            document.getElementById('progressText').innerHTML = progressText;
+            document.getElementById('totalStars').textContent = state.stars;
+            
+            const totalLearned = learnedSuras + learnedShop;
+            let starDisplay = '';
+            if (totalLearned >= 12) starDisplay = '⭐⭐⭐⭐⭐';
+            else if (totalLearned >= 9) starDisplay = '⭐⭐⭐⭐';
+            else if (totalLearned >= 6) starDisplay = '⭐⭐⭐';
+            else if (totalLearned >= 3) starDisplay = '⭐⭐';
+            else starDisplay = '⭐';
+            
+            document.getElementById('progressStars').textContent = starDisplay;
+        }
+
+        // ADD STAR
+        function addStar() {
+            state.stars++;
+            saveState();
+            
+            const pop = document.createElement('div');
+            pop.textContent = '+1 ⭐';
+            pop.style = 'position: fixed; top: 50%; left: 50%; font-size: 60px; font-weight: 800; color: #FFD700; z-index: 9999; animation: starPop 1s ease-out;';
+            document.body.appendChild(pop);
+            setTimeout(() => pop.remove(), 1000);
+        }
+
+        // CHANGE TAB
+        function changeTab(tab) {
+            state.currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab-' + tab).classList.add('active');
+            render();
+        }
+
+        // RENDER
+        function render() {
+            const content = document.getElementById('content');
+            content.innerHTML = '';
+            
+            if (state.currentTab === 'shop') {
+                renderShop();
+            } else {
+                const items = DATA[state.currentTab] || [];
+                items.forEach(item => {
+                    const status = state.progress[item.id] || 'new';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card ' + (status === 'learned' ? 'learned' : status === 'learning' ? 'learning' : '');
+                    
+                    let badge = '';
+                    if (status === 'learned') badge = '<div class="badge">✅</div>';
+                    else if (status === 'learning') badge = '<div class="badge">📖</div>';
+                    
+                    card.innerHTML = `
+                        ${badge}
+                        <div class="card-header">
+                            <div class="card-title">${item.name}</div>
+                            <div class="card-number">${item.num || '•'}</div>
+                        </div>
+                        <div class="card-info">${item.ayat} ayet</div>
+                        <div class="card-buttons">
+                            <button class="btn btn-learn" onclick="learn(${item.id})">📚 Öğren</button>
+                            <button class="btn btn-audio" id="audio-${item.id}" onclick="playAudio(${item.id})">🔊 Dinle</button>
+                            <button class="btn btn-practice" onclick="practice(${item.id})">🎯 Test</button>
+                        </div>
+                    `;
+                    
+                    content.appendChild(card);
+                });
+            }
+        }
+
+        // RENDER SHOP
+        function renderShop() {
+            const content = document.getElementById('content');
+            content.innerHTML = '';
+            
+            DATA.shop.forEach(item => {
+                const isUnlocked = state.unlocked.includes(item.id);
+                const canUnlock = state.stars >= item.cost;
+                
+                const card = document.createElement('div');
+                card.className = 'card shop-card ' + (isUnlocked ? 'unlocked' : 'locked');
+                card.style.borderColor = item.color;
+                card.style.background = isUnlocked ? item.color + '15' : '#f5f5f5';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-title" style="color: ${item.color}">${item.title}</div>
+                        <div class="card-number" style="background: ${item.color}">${isUnlocked ? '✅' : '🔒'}</div>
+                    </div>
+                    <div class="card-info">${isUnlocked ? 'Açıldı! ✨' : item.cost + ' ⭐ gerekli'}</div>
+                    ${isUnlocked 
+                        ? `<div class="card-info" style="font-size: 13px; line-height: 1.6;">${item.info.split('\n').slice(0, 2).join(', ')}...</div>`
+                        : `<div style="text-align: center; font-size: 60px; margin: 20px 0; opacity: 0.3;">${item.emoji}</div>`
+                    }
+                    <div class="card-buttons" style="grid-template-columns: ${isUnlocked ? '1fr 1fr' : '1fr'};">
+                        ${isUnlocked 
+                            ? `<button class="btn" style="background: ${item.color}; color: white;" onclick="viewShop('${item.id}')">📖 İncele</button>
+                               <button class="btn" style="background: ${item.color}; color: white;" onclick="practiceShop('${item.id}')">🎯 Test</button>`
+                            : canUnlock
+                                ? `<button class="btn" style="background: #FFD700; color: white;" onclick="unlock('${item.id}')">🌟 Aç (${item.cost} ⭐)</button>`
+                                : `<button class="btn" disabled style="opacity: 0.5;">Daha ${item.cost - state.stars} ⭐ lazım</button>`
+                        }
+                    </div>
+                `;
+                
+                content.appendChild(card);
+            });
+        }
+
+        // GET SURA
+        function getSura(id) {
+            for (let level in DATA) {
+                if (level === 'shop') continue;
+                const found = DATA[level].find(s => s.id === id);
+                if (found) return found;
+            }
+            return null;
+        }
+
+        // LEARN
+        function learn(id) {
+            const sura = getSura(id);
+            if (!sura) return;
+            
+            state.currentSura = sura;
+            state.currentPage = 1;
+            
+            document.getElementById('learnTitle').textContent = sura.name + ' Suresi';
+            document.getElementById('page1').innerHTML = `
+                <div class="page-label" style="background: #e3f2fd; color: #1565c0;">📖 Arapça ve Okunuşu</div>
+                <div class="arabic">${sura.ar}</div>
+                <div class="transliteration">🗣️ ${sura.tr}</div>
+            `;
+            document.getElementById('page2').innerHTML = `
+                <div class="page-label" style="background: #f3e5f5; color: #7b1fa2;">📝 Türkçe Anlamı</div>
+                <div class="meaning">${sura.me}</div>
+                <div class="info-box">📚 ${sura.inf}</div>
+            `;
+            
+            document.getElementById('page1').style.display = 'block';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('pageIndicator').textContent = '1 / 2';
+            document.getElementById('pageBtn').textContent = 'Sonraki →';
+            document.getElementById('pageBtn').onclick = () => {
+                if (state.currentPage === 1) {
+                    document.getElementById('page1').style.display = 'none';
+                    document.getElementById('page2').style.display = 'block';
+                    document.getElementById('pageIndicator').textContent = '2 / 2';
+                    document.getElementById('pageBtn').textContent = '← Geri';
+                    state.currentPage = 2;
+                } else {
+                    document.getElementById('page2').style.display = 'none';
+                    document.getElementById('page1').style.display = 'block';
+                    document.getElementById('pageIndicator').textContent = '1 / 2';
+                    document.getElementById('pageBtn').textContent = 'Sonraki →';
+                    state.currentPage = 1;
+                }
+            };
+            
+            document.getElementById('learnModal').classList.add('show');
+            
+            if (!state.progress[id]) {
+                state.progress[id] = 'learning';
+                saveState();
+                render();
+            }
+        }
+
+        // PLAY AUDIO
+        function playAudio(id) {
+            const sura = getSura(id);
+            if (!sura) return;
+            
+            const btn = document.getElementById('audio-' + id);
+            
+            // Aynı sure - pause/resume
+            if (state.currentAudioId === id && state.currentAudio) {
+                if (state.currentAudio.paused) {
+                    state.currentAudio.play();
+                    btn.textContent = '⏸️ Durdur';
+                    btn.style.background = '#FF5722';
+                } else {
+                    state.currentAudio.pause();
+                    btn.textContent = '▶️ Devam';
+                    btn.style.background = '#4CAF50';
+                }
+                return;
+            }
+            
+            // Yeni sure - öncekini durdur
+            if (state.currentAudio) {
+                state.currentAudio.pause();
+                const oldBtn = document.getElementById('audio-' + state.currentAudioId);
+                if (oldBtn) {
+                    oldBtn.textContent = '🔊 Dinle';
+                    oldBtn.style.background = '#9C27B0';
+                }
+            }
+            
+            // Subhaneke için gerçek MP3
+            if (sura.num === 0) {
+                const url = 'subhaneke.mp3';
+                state.currentAudio = new Audio(url);
+                state.currentAudioId = id;
+                
+                state.currentAudio.play();
+                btn.textContent = '⏸️ Durdur';
+                btn.style.background = '#FF5722';
+                
+                state.currentAudio.onended = () => {
+                    btn.textContent = '🔊 Dinle';
+                    btn.style.background = '#9C27B0';
+                    state.currentAudio = null;
+                    state.currentAudioId = null;
+                };
+                
+                state.currentAudio.onerror = () => {
+                    btn.textContent = '🔊 Dinle';
+                    btn.style.background = '#9C27B0';
+                    state.currentAudio = null;
+                    state.currentAudioId = null;
+                    alert('Ses yüklenemedi!');
+                };
+                
+                return;
+            }
+            
+            // MP3 çal
+            const url = `https://download.quranicaudio.com/quran/husary_muallim_kids_repeat/${String(sura.num).padStart(3, '0')}.mp3`;
+            state.currentAudio = new Audio(url);
+            state.currentAudioId = id;
+            
+            state.currentAudio.play();
+            btn.textContent = '⏸️ Durdur';
+            btn.style.background = '#FF5722';
+            
+            state.currentAudio.onended = () => {
+                btn.textContent = '🔊 Dinle';
+                btn.style.background = '#9C27B0';
+                state.currentAudio = null;
+                state.currentAudioId = null;
+            };
+            
+            state.currentAudio.onerror = () => {
+                btn.textContent = '🔊 Dinle';
+                btn.style.background = '#9C27B0';
+                state.currentAudio = null;
+                state.currentAudioId = null;
+                alert('Ses yüklenemedi!');
+            };
+        }
+
+        // PRACTICE
+        function practice(id) {
+            const sura = getSura(id);
+            if (!sura) return;
+            
+            state.currentSura = sura;
+            state.quizIndex = 0;
+            state.correctCount = 0;
+            state.wrongCount = 0;
+            showQuiz();
+        }
+
+        // SHOW QUIZ
+        function showQuiz() {
+            if (state.quizIndex >= state.currentSura.q.length) {
+                closeModal('quizModal');
+                if (state.correctCount === state.currentSura.q.length) {
+                    state.progress[state.currentSura.id] = 'learned';
+                    saveState();
+                    render();
+                    document.getElementById('successModal').classList.add('show');
+                } else {
+                    alert(`${state.correctCount}/${state.currentSura.q.length} doğru! Tekrar dene 😊`);
+                }
+                return;
+            }
+            
+            const quiz = state.currentSura.q[state.quizIndex];
+            
+            if (quiz.t === 'fill') {
+                document.getElementById('quizQuestion').innerHTML = `
+                    <div style="font-size: 24px; font-weight: 700; color: #667eea; margin-bottom: 20px;">🧩 Boşluğu Doldur!</div>
+                    <div style="font-size: 20px;">${quiz.q}</div>
+                `;
+            } else {
+                document.getElementById('quizQuestion').textContent = quiz.q;
+            }
+            
+            const opts = document.getElementById('quizOptions');
+            opts.innerHTML = '';
+            
+            quiz.o.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-option';
+                div.textContent = opt;
+                div.onclick = () => checkAnswer(i, quiz);
+                opts.appendChild(div);
+            });
+            
+            document.getElementById('quizModal').classList.add('show');
+        }
+
+        // CHECK ANSWER
+        function checkAnswer(selected, quiz) {
+            const opts = document.querySelectorAll('.quiz-option');
+            let correct = false;
+            
+            if (quiz.t === 'fill') {
+                correct = quiz.o[selected] === quiz.a;
+                opts.forEach((opt, i) => {
+                    opt.onclick = null;
+                    if (quiz.o[i] === quiz.a) opt.classList.add('correct');
+                    else if (i === selected && !correct) opt.classList.add('wrong');
+                });
+            } else {
+                correct = selected === quiz.c;
+                opts.forEach((opt, i) => {
+                    opt.onclick = null;
+                    if (i === quiz.c) opt.classList.add('correct');
+                    else if (i === selected) opt.classList.add('wrong');
+                });
+            }
+            
+            if (correct) {
+                // Doğru cevap
+                state.correctCount++;
+                
+                // Bu soru için daha önce yıldız alınmış mı kontrol et
+                const questionKey = state.currentSura.id + '-' + state.quizIndex;
+                if (!state.earnedStars[questionKey]) {
+                    addStar();
+                    state.earnedStars[questionKey] = true;
+                    saveState();
+                }
+                
+                setTimeout(() => {
+                    state.quizIndex++;
+                    state.wrongCount = 0; // Yeni soru için sıfırla
+                    closeModal('quizModal');
+                    setTimeout(showQuiz, 500);
+                }, 1500);
+            } else {
+                // Yanlış cevap
+                state.wrongCount++;
+                
+                if (state.wrongCount >= 2) {
+                    // 2. yanlış - sonraki soruya geç
+                    setTimeout(() => {
+                        state.quizIndex++;
+                        state.wrongCount = 0;
+                        closeModal('quizModal');
+                        setTimeout(showQuiz, 500);
+                    }, 1500);
+                } else {
+                    // 1. yanlış - tekrar şansı ver
+                    setTimeout(() => {
+                        closeModal('quizModal');
+                        setTimeout(() => {
+                            // Aynı soruyu tekrar göster
+                            showQuiz();
+                        }, 500);
+                    }, 1500);
+                }
+            }
+        }
+
+        // START QUIZ
+        function startQuiz() {
+            closeModal('learnModal');
+            practice(state.currentSura.id);
+        }
+
+        // UNLOCK SHOP
+        function unlock(id) {
+            const item = DATA.shop.find(i => i.id === id);
+            if (state.stars >= item.cost) {
+                state.stars -= item.cost;
+                state.unlocked.push(id);
+                saveState();
+                
+                const msg = document.createElement('div');
+                msg.textContent = `🎉 ${item.title} Açıldı!`;
+                msg.style = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; font-weight: 800; color: ${item.color}; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 9999;`;
+                document.body.appendChild(msg);
+                setTimeout(() => {
+                    msg.remove();
+                    render();
+                }, 2000);
+            }
+        }
+
+        // VIEW SHOP
+        function viewShop(id) {
+            const item = DATA.shop.find(i => i.id === id);
+            
+            document.getElementById('learnTitle').textContent = item.title;
+            document.getElementById('page1').innerHTML = `
+                <div style="background: ${item.color}15; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                    <div style="font-size: 20px; font-weight: 700; color: ${item.color}; margin-bottom: 15px;">📚 Bilgi</div>
+                    <div style="font-size: 18px; line-height: 2; font-weight: 600; text-align: left; white-space: pre-line;">${item.info}</div>
+                </div>
+            `;
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('pageIndicator').style.display = 'none';
+            document.getElementById('pageBtn').style.display = 'none';
+            
+            document.getElementById('learnModal').classList.add('show');
+        }
+
+        // PRACTICE SHOP
+        function practiceShop(id) {
+            const item = DATA.shop.find(i => i.id === id);
+            state.currentSura = { id: item.id, q: item.q };
+            state.quizIndex = 0;
+            state.correctCount = 0;
+            state.wrongCount = 0;
+            showQuiz();
+        }
+
+        // CLOSE MODAL
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+
+        // INIT
+        loadState();
+        updateProgress();
+        render();
+    </script>
+</body>
+</html>
